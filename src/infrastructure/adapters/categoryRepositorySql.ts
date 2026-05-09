@@ -44,8 +44,9 @@ export default class categoryRepositorySql implements categoryRepository {
     try {
     const pool = await Database.getConnection()  
       const result = await pool.request()
+        .input("id",sql.VarChar,id)
         .query(`select * from CompetitionCategory
-                   where id='${id}'`);
+                   where id=@id`);
  
          if(!result.recordset[0]) throw new Error("no se encontro la competitonCategory")
 
@@ -60,7 +61,8 @@ export default class categoryRepositorySql implements categoryRepository {
       const pool = await Database.getConnection()
        await pool
         .request()
-        .query(`DELETE FROM CompetitionCategory WHERE id = '${id}';`);
+        .input("id",sql.VarChar,id)
+        .query(`DELETE FROM CompetitionCategory WHERE id =@id;`);
 
     } catch (error) {
       throw error;

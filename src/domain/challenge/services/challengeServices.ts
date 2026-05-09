@@ -46,15 +46,17 @@ async createchallenge(challenge: Challenge,notification:UserNotification): Promi
       retador_id,
     );
 
-        if (challengeExists && estadosActivos.includes(challengeExists.estado)) {
+     if (vehicleRetado.activo === false || vehicleRetador.activo === false)
+      throw new Error("necesitas tener un vehiculo activo");
+
+    if (challengeExists && estadosActivos.includes(challengeExists.estado)) {
           throw new Error("Ya existe un reto entre ambos pilotos");
         }
 
     if ( userRetado.rango !== userRetador.rango || vehicleRetado.tipo_vehiculo !== vehicleRetador.tipo_vehiculo)
       throw new Error("no se puede retar a un piloto de otro rango o diferente vehiculo",);
 
-    if (vehicleRetado.activo === false || vehicleRetador.activo === false)
-      throw new Error("necesitas tener un vehiculo activo");
+  
 
     const challengeResponse = await this.challengeRepository.createchallenge(challenge);
     
@@ -62,13 +64,7 @@ async createchallenge(challenge: Challenge,notification:UserNotification): Promi
        await this.notificationServicie.createNotification({...notification,referencia_id:challengeResponse.id},challengeNotificationIo)
 
     }
-
-
-    return challengeResponse
-
-    
-     
-    
+    return challengeResponse    
   }
 
 async getchallenge(id: string): Promise<Challenge> {

@@ -44,7 +44,6 @@ if (userId) {
 App.use(cors({
   origin: [
     "http://localhost:5173",
-   "https://proud-water-023456e10.7.azurestaticapps.net"
   ],
   credentials: true
 }));

@@ -48,8 +48,8 @@ export class vehicleRepositorySql implements vehicleRepository{
         try{
           const pool = await Database.getConnection()
     
-        const result = await pool.request().query(`select * from Vehicle
-               where id='${id}'`);
+        const result = await pool.request().input("id", sql.VarChar, id).query(`select * from Vehicle
+               where id=@id`);
     console.log("sql result",result)
                
                if(!result.recordset[0]) throw new Error("no se encontro el Vehiculo o no existe")
@@ -67,8 +67,8 @@ export class vehicleRepositorySql implements vehicleRepository{
 
         try{
           const pool = await Database.getConnection()    
-        const result = await pool.request().query(`select * from Vehicle
-               where user_id='${id}' ORDER BY activo DESC`);
+        const result = await pool.request().input("user_id", sql.UniqueIdentifier, id).query(`select * from Vehicle
+               where user_id=@user_id ORDER BY activo DESC`);
                
                if(!result.recordset[0]) throw new Error("no se encontro el Vehiculo o no existe")
     
@@ -82,14 +82,10 @@ export class vehicleRepositorySql implements vehicleRepository{
       }
     
        async  deleteVehicle(id:string): Promise<void> {
-
-
         try{
           const pool = await Database.getConnection()
     
-              await pool.request().query(`DELETE FROM Vehicle WHERE id = '${id}';`)    
-        
-    
+              await pool.request().input("id", sql.VarChar, id).query(`DELETE FROM Vehicle WHERE id = @id;`)    
 
             } catch(error){
               throw error
@@ -103,7 +99,7 @@ export class vehicleRepositorySql implements vehicleRepository{
              const pool = await Database.getConnection()
                  const request =  pool.request(); 
     
-                 console.log(vehicle)
+                
                 const claveValor:string[] = []
     
                 for(const [clave,valor] of Object.entries(vehicle)){

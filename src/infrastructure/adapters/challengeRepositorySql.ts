@@ -78,8 +78,8 @@ export default class challengeRepositorySql implements challengeRepository {
     try {
       const pool = await Database.getConnection();
 
-      const result = await pool.request().query(`select * from Challenge
-                   where id='${id}'`);
+      const result = await pool.request().input("id", sql.VarChar, id).query(`select * from Challenge
+                   where id=@id`);
 
       if (!result.recordset?.length)
         throw new Error("no se encontro el challenge");
@@ -205,7 +205,7 @@ export default class challengeRepositorySql implements challengeRepository {
   async deletechallenge(id: string): Promise<void> {
     try {
       const pool = await Database.getConnection();
-      await pool.request().query(`DELETE FROM Challenge WHERE id = '${id}'`);
+      await pool.request().input("id", sql.VarChar, id).query(`DELETE FROM Challenge WHERE id = @id`);
     } catch (error) {
       throw error;
     }

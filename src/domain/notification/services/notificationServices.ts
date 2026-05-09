@@ -44,14 +44,5 @@ export default class notificationServices {
 
     return await this.notificationRepository.AllNotificationsAsRead(userId)
 
-   }
-
-//     async  updateNotification (notification:Partial<UserNotification>):Promise<Partial<UserNotification>>{
-
-//     return await this.notificationRepository.updateNotification(notification)
-
-//    }
-
-
-   
+   }   
 }

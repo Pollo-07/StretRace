@@ -83,8 +83,8 @@ async createUser(user: User): Promise<User> {
     const pool = await Database.getConnection()
     
 
-    const result = await pool.request().query(`select * from Users
-           where id='${id}'`);
+    const result = await pool.request().input("id", sql.VarChar, id).query(`select * from Users
+           where id=@id`);
 
       if(!result.recordset?.length) throw new Error("no se encontro el usuario")
 
@@ -97,9 +97,7 @@ async createUser(user: User): Promise<User> {
    async  deleteUser(id:string | string[]): Promise<void> {
          const pool = await Database.getConnection()
 
-         await pool.request().query(`DELETE FROM Users WHERE id = '${id}';`)
-    
-
+         await pool.request().input("id", sql.VarChar, id).query(`DELETE FROM Users WHERE id = @id;`)
   }
 
    async  updateUser(user: Partial<User>,id:string,transaction:sql.Transaction): Promise<User> {
@@ -135,7 +133,8 @@ async createUser(user: User): Promise<User> {
    async  findByEmail(email: string): Promise<User> {
           const pool = await Database.getConnection()
 
-         const result = await pool.request().query(`select * from Users where Users.email = '${email}'`)
+         const result = await pool.request().input("email", sql.VarChar, email)
+         .query(`select * from Users where Users.email = @email`)
 
 
          if(!result.recordset[0])  throw new Error("no se encontro el usuario")
@@ -173,7 +172,7 @@ async createUser(user: User): Promise<User> {
      async  respectPilot(userId:string,respectUserId:string): Promise<void> {
           const pool = await Database.getConnection()
           
-         const result = await pool.request()
+          await pool.request()
           .input("userId", sql.VarChar, userId)
           .input("respectUserId",sql.VarChar,respectUserId)
           .query(`
@@ -265,7 +264,8 @@ async createUser(user: User): Promise<User> {
  async  adminFindByEmail(email: string): Promise<typesAdmin> {
           const pool = await Database.getConnection()
 
-         const result = await pool.request().query(`select * from Admins where Users.email = '${email}'`)
+         const result = await pool.request().input("email", sql.VarChar, email)
+         .query(`select * from Admins where Users.email = @email`)
 
 
          if(!result.recordset[0])  throw new Error("no se encontro el usuario")

@@ -70,7 +70,8 @@ export default class notificationRepositorySql implements notificationRepository
         const pool = await Database.getConnection()
        await pool
         .request()
-        .query(`DELETE FROM Notification WHERE id = '${id}';`);
+        .input("id", sql.VarChar, id)
+        .query(`DELETE FROM Notification WHERE id = @id;`);
 
       
     } catch (error) {
